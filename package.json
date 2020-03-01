@@ -1,0 +1,96 @@
+{
+	"name": "@valeera/idgenerator",
+	"version": "0.1.0",
+	"description": "A light weight number ID generator written in TS.",
+	"main": "build/IdGenerator.js",
+	"repository": "ValeeraJS/IdGenerator",
+	"jsnext:main": "build/IdGenerator.module.js",
+	"module": "build/IdGenerator.module.js",
+	"types": "build/IdGenerator.d.ts",
+	"files": [
+		"build",
+		"LICENSE",
+		"package.json",
+		"README.md",
+		"src"
+	],
+	"directories": {
+		"docs": "docs",
+		"examples": "examples",
+		"src": "src"
+	},
+	"eslintConfig": {
+		"parser": "@typescript-eslint/parser",
+		"extends": "mdcs",
+		"plugins": [
+			"html",
+			"@typescript-eslint"
+		],
+		"rules": {
+			"@typescript-eslint/no-unused-vars": 1,
+			"@typescript-eslint/indent": [
+				"error",
+				"tab",
+				{
+					"SwitchCase": 1
+				}
+			]
+		}
+	},
+	"scripts": {
+		"build": "rollup -w -c scripts/rollup.config.js",
+		"build-legacy": "rollup -c scripts/rollup.config.legacy.js",
+		"build-closure": "google-closure-compiler --compilation_level=ADVANCED_OPTIMIZATIONS --warning_level=VERBOSE --jscomp_off=globalThis --jscomp_off=checkTypes --externs scripts/externs.js --language_in=ECMASCRIPT_NEXT --js build/IdGenerator.js --js_output_file build/IdGenerator.min.js",
+		"build-closure-legacy": "google-closure-compiler --compilation_level=ADVANCED_OPTIMIZATIONS --warning_level=VERBOSE --jscomp_off=globalThis --jscomp_off=checkTypes --externs scripts/externs.js --language_in=ECMASCRIPT5 --js build/IdGenerator.legacy.js --js_output_file build/IdGenerator.legacy.min.js",
+		"build-all": "npm run build && npm run build-legacy && npm run build-closure && npm run build-closure-legacy",
+		"start": "npm run dev",
+		"lint": "eslint src --ext js --ext ts",
+		"test": "nyc --reporter=html --reporter=text mocha --require esm",
+		"travis": "npm run lint && npm test"
+	},
+	"keywords": [
+		"IdGenerator",
+		"utils",
+		"module",
+		"valeera",
+		"tools",
+		"framework"
+	],
+	"author": "hypnosnova",
+	"license": "MIT",
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^2.20.0",
+		"@typescript-eslint/parser": "^2.20.0",
+		"chai": "^4.2.0",
+		"concurrently": "^5.0.2",
+		"eslint": "^6.8.0",
+		"eslint-plugin-html": "^6.0.0",
+		"esm": "^3.2.25",
+		"google-closure-compiler": "20191111.0.0",
+		"http-server": "^0.12.0",
+		"mocha": "6.2.2",
+		"nyc": "15.0.0",
+		"rollup": "^1.31.1",
+		"rollup-plugin-json": "^4.0.0",
+		"rollup-plugin-typescript2": "^0.26.0",
+		"typescript": "^3.8.2"
+	},
+	"jspm": {
+		"files": [
+			"package.json",
+			"LICENSE",
+			"README.md",
+			"build/IdGenerator.js",
+			"build/IdGenerator.min.js",
+			"build/IdGenerator.module.js",
+			"build/IdGenerator.legacy.js",
+			"build/IdGenerator.legacy.min.js",
+			"build/IdGenerator.legacy.module.js"
+		],
+		"directories": {}
+	},
+	"dependencies": {
+		"@valeera/fetcher": "^0.1.0",
+		"three": "^0.113.2"
+	}
+}

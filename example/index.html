@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdn.bootcss.com/three.js/110/three.js"></script>
+    <script src="./lib/OrbitControls.js"></script>
+    <script src="./lib/EventDispatcher.js"></script>
+    <script src="./lib/Fetcher.js"></script>
+    <script src="../build/Voxel.js"></script>
+    <script src="https://cdn.bootcss.com/dat-gui/0.7.6/dat.gui.js"></script>
+    <script>
+        let renderer, scene, camera, stats;
+        let mesh;
+        let mouse, raycaster;
+        const gui = new dat.GUI();
+        const loader = new Voxel.VoxelLoader();
+        loader.load('./vox/monu9.vox').then(chunk => {
+            let material = new THREE.MeshLambertMaterial({
+                vertexColors: THREE.VertexColors,
+                wireframe: false,
+                side: THREE.DoubleSide
+            });
+            mesh = new THREE.Mesh(new Voxel.VoxelGeometry(chunk), material);
+            mesh.rotation.set(-Math.PI / 2, 0, 0);
+            mesh.position.set(-chunk.chunkSizeX / 2 * chunk.blockSize,
+                -chunk.chunkSizeY / 2 * chunk.blockSize, chunk.chunkSizeZ / 2 * chunk.blockSize);
+            scene.add(mesh);
+
+            initGui(mesh);
+        });
+
+        init();
+
+        function initGui(mesh) {
+            gui.add(mesh.material, 'wireframe');
+            const { chunk, faceOptions } = mesh.geometry;
+            const type = Voxel.VoxelChunk.buildType;
+            gui.add(chunk, 'blockSize', 1, 10).step(1).onChange((value) => {
+                mesh.geometry.update();
+                mesh.position.set(-chunk.chunkSizeX / 2 * chunk.blockSize,
+                    -chunk.chunkSizeY / 2 * chunk.blockSize, chunk.chunkSizeZ / 2 * chunk.blockSize);
+            });
+            gui.add(faceOptions, 'left', {
+                NONE: type.NONE,
+                SURFACE: type.SURFACE,
+                VOLUME: type.VOLUME,
+                BRICKS: type.BRICKS
+            }).onChange((value) => {
+                mesh.geometry.update();
+                mesh.position.set(-chunk.chunkSizeX / 2 * chunk.blockSize,
+                    -chunk.chunkSizeY / 2 * chunk.blockSize, chunk.chunkSizeZ / 2 * chunk.blockSize);
+            });
+            gui.add(faceOptions, 'right', {
+                NONE: type.NONE,
+                SURFACE: type.SURFACE,
+                VOLUME: type.VOLUME,
+                BRICKS: type.BRICKS
+            }).onChange((value) => {
+                mesh.geometry.update();
+            });
+            gui.add(faceOptions, 'top', {
+                NONE: type.NONE,
+                SURFACE: type.SURFACE,
+                VOLUME: type.VOLUME,
+                BRICKS: type.BRICKS
+            }).onChange((value) => {
+                mesh.geometry.update();
+            });
+            gui.add(faceOptions, 'bottom', {
+                NONE: type.NONE,
+                SURFACE: type.SURFACE,
+                VOLUME: type.VOLUME,
+                BRICKS: type.BRICKS
+            }).onChange((value) => {
+                mesh.geometry.update();
+            });
+            gui.add(faceOptions, 'front', {
+                NONE: type.NONE,
+                SURFACE: type.SURFACE,
+                VOLUME: type.VOLUME,
+                BRICKS: type.BRICKS
+            }).onChange((value) => {
+                mesh.geometry.update();
+            });
+            gui.add(faceOptions, 'back', {
+                NONE: type.NONE,
+                SURFACE: type.SURFACE,
+                VOLUME: type.VOLUME,
+                BRICKS: type.BRICKS
+            }).onChange((value) => {
+                mesh.geometry.update();
+            });
+        }
+
+        function init() {
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+            camera.position.z = 100;
+
+            var controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.minDistance = 5;
+            controls.maxDistance = 2000;
+
+            scene.add(new THREE.AmbientLight(0x443333));
+
+            var light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(1, 0.75, 0.5);
+            scene.add(light);
+
+            light = new THREE.DirectionalLight(0xffffff, 0.4);
+            light.position.set(- 1, 0.25, - 0.7);
+            scene.add(light);
+
+            window.addEventListener('resize', onWindowResize, false);
+
+            onWindowResize();
+            animate();
+
+        }
+
+        function onWindowResize() {
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+        }
+
+        function animate() {
+
+            requestAnimationFrame(animate);
+
+            renderer.render(scene, camera);
+
+        }
+    </script>
+</body>
+
+</html>
