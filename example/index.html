@@ -30,7 +30,7 @@
         let mouse, raycaster;
         const gui = new dat.GUI();
         const loader = new Voxel.VoxelLoader();
-        loader.load('./vox/monu9.vox').then(chunk => {
+        loader.load('./vox/3.vox').then(chunk => {
             let material = new THREE.MeshLambertMaterial({
                 vertexColors: THREE.VertexColors,
                 wireframe: false,
@@ -53,6 +53,7 @@
             const type = Voxel.VoxelChunk.buildType;
             gui.add(chunk, 'blockSize', 1, 10).step(1).onChange((value) => {
                 mesh.geometry.update();
+                mesh.material.needsupdate = true;
                 mesh.position.set(-chunk.chunkSizeX / 2 * chunk.blockSize,
                     -chunk.chunkSizeY / 2 * chunk.blockSize, chunk.chunkSizeZ / 2 * chunk.blockSize);
             });
@@ -63,6 +64,7 @@
                 BRICKS: type.BRICKS
             }).onChange((value) => {
                 mesh.geometry.update();
+                mesh.material.needsupdate = true;
                 mesh.position.set(-chunk.chunkSizeX / 2 * chunk.blockSize,
                     -chunk.chunkSizeY / 2 * chunk.blockSize, chunk.chunkSizeZ / 2 * chunk.blockSize);
             });
@@ -73,6 +75,7 @@
                 BRICKS: type.BRICKS
             }).onChange((value) => {
                 mesh.geometry.update();
+                mesh.material.needsupdate = true;
             });
             gui.add(faceOptions, 'top', {
                 NONE: type.NONE,
@@ -81,6 +84,7 @@
                 BRICKS: type.BRICKS
             }).onChange((value) => {
                 mesh.geometry.update();
+                mesh.material.needsupdate = true;
             });
             gui.add(faceOptions, 'bottom', {
                 NONE: type.NONE,
@@ -89,6 +93,7 @@
                 BRICKS: type.BRICKS
             }).onChange((value) => {
                 mesh.geometry.update();
+                mesh.material.needsupdate = true;
             });
             gui.add(faceOptions, 'front', {
                 NONE: type.NONE,
@@ -97,6 +102,7 @@
                 BRICKS: type.BRICKS
             }).onChange((value) => {
                 mesh.geometry.update();
+                mesh.material.needsupdate = true;
             });
             gui.add(faceOptions, 'back', {
                 NONE: type.NONE,
@@ -105,6 +111,7 @@
                 BRICKS: type.BRICKS
             }).onChange((value) => {
                 mesh.geometry.update();
+                mesh.material.needsupdate = true;
             });
         }
 
