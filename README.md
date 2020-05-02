@@ -2,6 +2,12 @@
 
 体素库。可以解析Magicavoxel的.vox格式文件，变成BufferGeometry。也可以将图片体素化。
 
+### demo
+
+https://valeerajs.github.io/Voxel/example/index.html
+
+https://valeerajs.github.io/Voxel/example/imageToVoxMesh.html
+
 ### TODO
 
 1. 一些算法优化

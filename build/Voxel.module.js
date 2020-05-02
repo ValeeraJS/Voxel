@@ -31,15 +31,15 @@ var VOXEL_BUILD_TYPE;
     VOXEL_BUILD_TYPE["NONE"] = "NONE";
     VOXEL_BUILD_TYPE["SURFACE"] = "SURFACE";
     VOXEL_BUILD_TYPE["VOLUME"] = "VOLUME";
-    VOXEL_BUILD_TYPE["BRICKS"] = "BRICKS";
+    VOXEL_BUILD_TYPE["BRICKS"] = "BRICKS"; // 表面不合并（用于编辑）
 })(VOXEL_BUILD_TYPE || (VOXEL_BUILD_TYPE = {}));
 const DEFAULT_BUILD_OPTIONS = {
-    left: VOXEL_BUILD_TYPE.SURFACE,
-    right: VOXEL_BUILD_TYPE.SURFACE,
-    top: VOXEL_BUILD_TYPE.SURFACE,
-    bottom: VOXEL_BUILD_TYPE.SURFACE,
-    front: VOXEL_BUILD_TYPE.SURFACE,
-    back: VOXEL_BUILD_TYPE.SURFACE,
+    left: VOXEL_BUILD_TYPE.BRICKS,
+    right: VOXEL_BUILD_TYPE.BRICKS,
+    top: VOXEL_BUILD_TYPE.BRICKS,
+    bottom: VOXEL_BUILD_TYPE.BRICKS,
+    front: VOXEL_BUILD_TYPE.BRICKS,
+    back: VOXEL_BUILD_TYPE.BRICKS,
 };
 class VoxelChunk {
     constructor() {
@@ -197,37 +197,44 @@ class VoxelChunk {
         let countX = 0;
         let countZ = 0;
         let blockX, blockZ;
-        for (let cx = 0; cx + x < this.chunkSizeX; cx++) {
-            blockX = this.blocks[x + cx][y][z];
-            if (blockX.active && !blockX.drawnBottomSide && blockX.colorEquals(block)
-                && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawBottom(x + cx, y, z) : true)) {
-                countX++;
-                let tmpCountZ = 0;
-                for (let cz = 0; cz + z < this.chunkSizeZ; cz++) {
-                    blockZ = this.blocks[x + cx][y][z + cz];
-                    if (blockZ.active && !blockZ.drawnBottomSide && blockZ.colorEquals(block)
-                        && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawBottom(x + cx, y, z + cz) : true)) {
-                        tmpCountZ++;
+        if (type !== VOXEL_BUILD_TYPE.BRICKS) {
+            for (let cx = 0; cx + x < this.chunkSizeX; cx++) {
+                blockX = this.blocks[x + cx][y][z];
+                if (blockX.active && !blockX.drawnBottomSide && blockX.colorEquals(block)
+                    && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawBottom(x + cx, y, z) : true)) {
+                    countX++;
+                    let tmpCountZ = 0;
+                    for (let cz = 0; cz + z < this.chunkSizeZ; cz++) {
+                        blockZ = this.blocks[x + cx][y][z + cz];
+                        if (blockZ.active && !blockZ.drawnBottomSide && blockZ.colorEquals(block)
+                            && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawBottom(x + cx, y, z + cz) : true)) {
+                            tmpCountZ++;
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
+                    if (tmpCountZ < countZ || countZ === 0) {
+                        countZ = tmpCountZ;
+                    }
+                    if (tmpCountZ === 0 && countZ > countX) {
                         break;
                     }
                 }
-                if (tmpCountZ < countZ || countZ === 0) {
-                    countZ = tmpCountZ;
-                }
-                if (tmpCountZ === 0 && countZ > countX) {
+                else {
                     break;
                 }
             }
-            else {
-                break;
+            for (let x1 = 0; x1 < countX; x1++) {
+                for (let y1 = 0; y1 < countZ; y1++) {
+                    this.blocks[x + x1][y][z + y1].drawnBottomSide = true;
+                }
             }
         }
-        for (let x1 = 0; x1 < countX; x1++) {
-            for (let y1 = 0; y1 < countZ; y1++) {
-                this.blocks[x + x1][y][z + y1].drawnBottomSide = true;
-            }
+        else {
+            countX++;
+            countZ++;
+            this.blocks[x][y][z].drawnBottomSide = true;
         }
         vertices.push([(x + countX) * blockSize, y * blockSize, (z + countZ) * blockSize]);
         vertices.push([x * blockSize, y * blockSize, (z + countZ) * blockSize]);
@@ -247,37 +254,44 @@ class VoxelChunk {
         let countX = 0;
         let countZ = 0;
         let blockX, blockZ;
-        for (let cx = 0; cx + x < this.chunkSizeX; cx++) {
-            blockX = this.blocks[x + cx][y][z];
-            if (blockX.active && !blockX.drawnTopSide && blockX.colorEquals(block)
-                && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawTop(x + cx, y, z) : true)) {
-                countX++;
-                let tmpCountY = 0;
-                for (let cz = 0; cz + z < this.chunkSizeZ; cz++) {
-                    blockZ = this.blocks[x + cx][y][z + cz];
-                    if (blockZ.active && !blockZ.drawnTopSide && blockZ.colorEquals(block)
-                        && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawTop(x + cx, y, z + cz) : true)) {
-                        tmpCountY++;
+        if (type !== VOXEL_BUILD_TYPE.BRICKS) {
+            for (let cx = 0; cx + x < this.chunkSizeX; cx++) {
+                blockX = this.blocks[x + cx][y][z];
+                if (blockX.active && !blockX.drawnTopSide && blockX.colorEquals(block)
+                    && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawTop(x + cx, y, z) : true)) {
+                    countX++;
+                    let tmpCountY = 0;
+                    for (let cz = 0; cz + z < this.chunkSizeZ; cz++) {
+                        blockZ = this.blocks[x + cx][y][z + cz];
+                        if (blockZ.active && !blockZ.drawnTopSide && blockZ.colorEquals(block)
+                            && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawTop(x + cx, y, z + cz) : true)) {
+                            tmpCountY++;
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
+                    if (tmpCountY < countZ || countZ === 0) {
+                        countZ = tmpCountY;
+                    }
+                    if (tmpCountY === 0 && countZ > countX) {
                         break;
                     }
                 }
-                if (tmpCountY < countZ || countZ === 0) {
-                    countZ = tmpCountY;
-                }
-                if (tmpCountY === 0 && countZ > countX) {
+                else {
                     break;
                 }
             }
-            else {
-                break;
+            for (let x1 = 0; x1 < countX; x1++) {
+                for (let y1 = 0; y1 < countZ; y1++) {
+                    this.blocks[x + x1][y][z + y1].drawnTopSide = true;
+                }
             }
         }
-        for (let x1 = 0; x1 < countX; x1++) {
-            for (let y1 = 0; y1 < countZ; y1++) {
-                this.blocks[x + x1][y][z + y1].drawnTopSide = true;
-            }
+        else {
+            countX++;
+            countZ++;
+            this.blocks[x][y][z].drawnTopSide = true;
         }
         vertices.push([(x + countX) * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize]);
         vertices.push([x * blockSize, y * blockSize + blockSize, z * blockSize]);
@@ -297,37 +311,44 @@ class VoxelChunk {
         let countX = 0;
         let countY = 0;
         let blockX, blockY;
-        for (let cx = 0; cx + x < this.chunkSizeX; cx++) {
-            blockX = this.blocks[x + cx][y][z];
-            if (blockX.active && !blockX.drawnFrontSide && blockX.colorEquals(block)
-                && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawFront(x + cx, y, z) : true)) {
-                countX++;
-                let tmpCountY = 0;
-                for (let cy = 0; cy + y < this.chunkSizeY; cy++) {
-                    blockY = this.blocks[x + cx][y + cy][z];
-                    if (blockY.active && !blockY.drawnFrontSide && blockY.colorEquals(block)
-                        && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawFront(x + cx, y + cy, z) : true)) {
-                        tmpCountY++;
+        if (type !== VOXEL_BUILD_TYPE.BRICKS) {
+            for (let cx = 0; cx + x < this.chunkSizeX; cx++) {
+                blockX = this.blocks[x + cx][y][z];
+                if (blockX.active && !blockX.drawnFrontSide && blockX.colorEquals(block)
+                    && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawFront(x + cx, y, z) : true)) {
+                    countX++;
+                    let tmpCountY = 0;
+                    for (let cy = 0; cy + y < this.chunkSizeY; cy++) {
+                        blockY = this.blocks[x + cx][y + cy][z];
+                        if (blockY.active && !blockY.drawnFrontSide && blockY.colorEquals(block)
+                            && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawFront(x + cx, y + cy, z) : true)) {
+                            tmpCountY++;
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
+                    if (tmpCountY < countY || countY === 0) {
+                        countY = tmpCountY;
+                    }
+                    if (tmpCountY === 0 && countY > countX) {
                         break;
                     }
                 }
-                if (tmpCountY < countY || countY === 0) {
-                    countY = tmpCountY;
-                }
-                if (tmpCountY === 0 && countY > countX) {
+                else {
                     break;
                 }
             }
-            else {
-                break;
+            for (let x1 = 0; x1 < countX; x1++) {
+                for (let y1 = 0; y1 < countY; y1++) {
+                    this.blocks[x + x1][y + y1][z].drawnFrontSide = true;
+                }
             }
         }
-        for (let x1 = 0; x1 < countX; x1++) {
-            for (let y1 = 0; y1 < countY; y1++) {
-                this.blocks[x + x1][y + y1][z].drawnFrontSide = true;
-            }
+        else {
+            countX++;
+            countY++;
+            this.blocks[x][y][z].drawnFrontSide = true;
         }
         vertices.push([(x + countX) * blockSize, (y + countY) * blockSize, z * blockSize + blockSize]);
         vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize + blockSize]);
@@ -347,37 +368,44 @@ class VoxelChunk {
         let countX = 0;
         let countY = 0;
         let blockX, blockY;
-        for (let cx = 0; cx + x < this.chunkSizeX; cx++) {
-            blockX = this.blocks[x + cx][y][z];
-            if (blockX.active && !blockX.drawnBackSide && blockX.colorEquals(block)
-                && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawBack(x + cx, y, z) : true)) {
-                countX++;
-                let tmpCountY = 0;
-                for (let cy = 0; cy + y < this.chunkSizeY; cy++) {
-                    blockY = this.blocks[x + cx][y + cy][z];
-                    if (blockY.active && !blockY.drawnBackSide && blockY.colorEquals(block)
-                        && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawBack(x + cx, y + cy, z) : true)) {
-                        tmpCountY++;
+        if (type !== VOXEL_BUILD_TYPE.BRICKS) {
+            for (let cx = 0; cx + x < this.chunkSizeX; cx++) {
+                blockX = this.blocks[x + cx][y][z];
+                if (blockX.active && !blockX.drawnBackSide && blockX.colorEquals(block)
+                    && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawBack(x + cx, y, z) : true)) {
+                    countX++;
+                    let tmpCountY = 0;
+                    for (let cy = 0; cy + y < this.chunkSizeY; cy++) {
+                        blockY = this.blocks[x + cx][y + cy][z];
+                        if (blockY.active && !blockY.drawnBackSide && blockY.colorEquals(block)
+                            && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawBack(x + cx, y + cy, z) : true)) {
+                            tmpCountY++;
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
+                    if (tmpCountY < countY || countY === 0) {
+                        countY = tmpCountY;
+                    }
+                    if (tmpCountY === 0 && countY > countX) {
                         break;
                     }
                 }
-                if (tmpCountY < countY || countY === 0) {
-                    countY = tmpCountY;
-                }
-                if (tmpCountY === 0 && countY > countX) {
+                else {
                     break;
                 }
             }
-            else {
-                break;
+            for (let x1 = 0; x1 < countX; x1++) {
+                for (let y1 = 0; y1 < countY; y1++) {
+                    this.blocks[x + x1][y + y1][z].drawnBackSide = true;
+                }
             }
         }
-        for (let x1 = 0; x1 < countX; x1++) {
-            for (let y1 = 0; y1 < countY; y1++) {
-                this.blocks[x + x1][y + y1][z].drawnBackSide = true;
-            }
+        else {
+            countX++;
+            countY++;
+            this.blocks[x][y][z].drawnBackSide = true;
         }
         vertices.push([(x + countX) * blockSize, (y + countY) * blockSize, z * blockSize]);
         vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
@@ -387,24 +415,6 @@ class VoxelChunk {
         vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize]);
         this.setColorData(colors, block);
         return;
-        // const block: VoxelBlock = this.blocks[x][y][z];
-        // let blockSize = this.blockSize;
-        // sides++;
-        // vertices.push([x * blockSize + blockSize, y * blockSize + blockSize, z * blockSize]);
-        // vertices.push([x * blockSize + blockSize, y * blockSize, z * blockSize]);
-        // vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        // vertices.push([x * blockSize + blockSize, y * blockSize + blockSize, z * blockSize]);
-        // vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        // vertices.push([x * blockSize, y * blockSize + blockSize, z * blockSize]);
-        // for (let i = 0; i < 6; i++) {
-        //     colors.push([
-        //         block.r,
-        //         block.g,
-        //         block.b,
-        //         block.a
-        //     ]);
-        // }
-        // return sides;
     }
     drawRight(vertices, colors, x, y, z, type) {
         const block = this.blocks[x][y][z];
@@ -415,43 +425,50 @@ class VoxelChunk {
         let countY = 0;
         let countZ = 0;
         let blockY, blockZ;
-        for (let cy = 0; cy < this.chunkSizeY; cy++) {
-            if (y + cy >= this.chunkSizeY) {
-                break;
-            }
-            blockY = this.blocks[x][y + cy][z];
-            if (blockY.active && !blockY.drawnRightSide && blockY.colorEquals(block)
-                && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawRight(x, y + cy, z) : true)) {
-                countY++;
-                let tmpCountY = 0;
-                for (let cz = 0; cz < this.chunkSizeZ; cz++) {
-                    if (z + cz >= this.chunkSizeZ) {
-                        break;
+        if (type !== VOXEL_BUILD_TYPE.BRICKS) {
+            for (let cy = 0; cy < this.chunkSizeY; cy++) {
+                if (y + cy >= this.chunkSizeY) {
+                    break;
+                }
+                blockY = this.blocks[x][y + cy][z];
+                if (blockY.active && !blockY.drawnRightSide && blockY.colorEquals(block)
+                    && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawRight(x, y + cy, z) : true)) {
+                    countY++;
+                    let tmpCountY = 0;
+                    for (let cz = 0; cz < this.chunkSizeZ; cz++) {
+                        if (z + cz >= this.chunkSizeZ) {
+                            break;
+                        }
+                        blockZ = this.blocks[x][y + cy][z + cz];
+                        if (blockZ.active && !blockZ.drawnRightSide && blockZ.colorEquals(block)
+                            && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawRight(x, y + cy, z + cz) : true)) {
+                            tmpCountY++;
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    blockZ = this.blocks[x][y + cy][z + cz];
-                    if (blockZ.active && !blockZ.drawnRightSide && blockZ.colorEquals(block)
-                        && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawRight(x, y + cy, z + cz) : true)) {
-                        tmpCountY++;
+                    if (tmpCountY < countZ || countZ === 0) {
+                        countZ = tmpCountY;
                     }
-                    else {
+                    if (tmpCountY === 0 && countZ > countY) {
                         break;
                     }
                 }
-                if (tmpCountY < countZ || countZ === 0) {
-                    countZ = tmpCountY;
-                }
-                if (tmpCountY === 0 && countZ > countY) {
+                else {
                     break;
                 }
             }
-            else {
-                break;
+            for (let x1 = 0; x1 < countY; x1++) {
+                for (let y1 = 0; y1 < countZ; y1++) {
+                    this.blocks[x][y + x1][z + y1].drawnRightSide = true;
+                }
             }
         }
-        for (let x1 = 0; x1 < countY; x1++) {
-            for (let y1 = 0; y1 < countZ; y1++) {
-                this.blocks[x][y + x1][z + y1].drawnRightSide = true;
-            }
+        else {
+            countZ++;
+            countY++;
+            this.blocks[x][y][z].drawnRightSide = true;
         }
         vertices.push([x * blockSize + blockSize, y * blockSize, z * blockSize]);
         vertices.push([x * blockSize + blockSize, (y + countY) * blockSize, (z + countZ) * blockSize]);
@@ -473,38 +490,45 @@ class VoxelChunk {
         let countZ = 0;
         let blockSize = this.blockSize;
         let ycy = 0, blockY, blockZ;
-        for (let cy = 0; y + cy < this.chunkSizeY; cy++) {
-            ycy = y + cy;
-            blockY = this.blocks[x][ycy][z];
-            if (blockY.active && !blockY.drawnLeftSide && blockY.colorEquals(block)
-                && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawLeft(x, ycy, z) : true)) {
-                countY++;
-                let tmpCountY = 0;
-                for (let cz = 0; z + cz < this.chunkSizeZ; cz++) {
-                    blockZ = this.blocks[x][ycy][z + cz];
-                    if (blockZ.active && !blockZ.drawnLeftSide && blockZ.colorEquals(block)
-                        && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawLeft(x, ycy, z + cz) : true)) {
-                        tmpCountY++;
+        if (type !== VOXEL_BUILD_TYPE.BRICKS) {
+            for (let cy = 0; y + cy < this.chunkSizeY; cy++) {
+                ycy = y + cy;
+                blockY = this.blocks[x][ycy][z];
+                if (blockY.active && !blockY.drawnLeftSide && blockY.colorEquals(block)
+                    && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawLeft(x, ycy, z) : true)) {
+                    countY++;
+                    let tmpCountY = 0;
+                    for (let cz = 0; z + cz < this.chunkSizeZ; cz++) {
+                        blockZ = this.blocks[x][ycy][z + cz];
+                        if (blockZ.active && !blockZ.drawnLeftSide && blockZ.colorEquals(block)
+                            && (type === VOXEL_BUILD_TYPE.SURFACE ? this.checkDrawLeft(x, ycy, z + cz) : true)) {
+                            tmpCountY++;
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
+                    if (tmpCountY < countZ || countZ === 0) {
+                        countZ = tmpCountY;
+                    }
+                    if (tmpCountY === 0 && countZ > countY) {
                         break;
                     }
                 }
-                if (tmpCountY < countZ || countZ === 0) {
-                    countZ = tmpCountY;
-                }
-                if (tmpCountY === 0 && countZ > countY) {
+                else {
                     break;
                 }
             }
-            else {
-                break;
+            for (let x1 = 0; x1 < countY; x1++) {
+                for (let y1 = 0; y1 < countZ; y1++) {
+                    this.blocks[x][y + x1][z + y1].drawnLeftSide = true;
+                }
             }
         }
-        for (let x1 = 0; x1 < countY; x1++) {
-            for (let y1 = 0; y1 < countZ; y1++) {
-                this.blocks[x][y + x1][z + y1].drawnLeftSide = true;
-            }
+        else {
+            countZ++;
+            countY++;
+            this.blocks[x][y][z].drawnLeftSide = true;
         }
         block.drawnLeftSide = true;
         vertices.push([x * blockSize, y * blockSize, z * blockSize]);
