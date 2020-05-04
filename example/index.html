@@ -22,15 +22,18 @@
     <script src="./lib/OrbitControls.js"></script>
     <script src="./lib/EventDispatcher.js"></script>
     <script src="./lib/Fetcher.js"></script>
+    <script src="./lib/Mathx.js"></script>
+    <script src="./lib/Tree.js"></script>
     <script src="../build/Voxel.js"></script>
     <script src="https://cdn.bootcss.com/dat-gui/0.7.6/dat.gui.js"></script>
     <script>
-        let renderer, scene, camera, stats;
+        let renderer, scene, camera, stats, wchunk;
         let mesh;
         let mouse, raycaster;
         const gui = new dat.GUI();
         const loader = new Voxel.VoxelLoader();
-        loader.load('./vox/3.vox').then(chunk => {
+        loader.load('./vox/8x8x8.vox').then(chunk => {
+            wchunk = chunk;
             let material = new THREE.MeshLambertMaterial({
                 vertexColors: THREE.VertexColors,
                 wireframe: false,
@@ -38,8 +41,8 @@
             });
             mesh = new THREE.Mesh(new Voxel.VoxelGeometry(chunk), material);
             mesh.rotation.set(-Math.PI / 2, 0, 0);
-            mesh.position.set(-chunk.chunkSizeX / 2 * chunk.blockSize,
-                -chunk.chunkSizeY / 2 * chunk.blockSize, chunk.chunkSizeZ / 2 * chunk.blockSize);
+            mesh.position.set(-chunk.sizeX / 2 * chunk.blockSize,
+                -chunk.sizeY / 2 * chunk.blockSize, chunk.sizeZ / 2 * chunk.blockSize);
             scene.add(mesh);
 
             initGui(mesh);
@@ -51,11 +54,19 @@
             gui.add(mesh.material, 'wireframe');
             const { chunk, faceOptions } = mesh.geometry;
             const type = Voxel.VoxelChunk.buildType;
+            const range = {
+                startX: chunk.rangeX[0],
+                startY: chunk.rangeY[0],
+                startZ: chunk.rangeZ[0],
+                endX: chunk.rangeX[1],
+                endY: chunk.rangeY[1],
+                endZ: chunk.rangeZ[1]
+            };
             gui.add(chunk, 'blockSize', 1, 10).step(1).onChange((value) => {
                 mesh.geometry.update();
                 mesh.material.needsupdate = true;
-                mesh.position.set(-chunk.chunkSizeX / 2 * chunk.blockSize,
-                    -chunk.chunkSizeY / 2 * chunk.blockSize, chunk.chunkSizeZ / 2 * chunk.blockSize);
+                mesh.position.set(-chunk.sizeX / 2 * chunk.blockSize,
+                    -chunk.sizeY / 2 * chunk.blockSize, chunk.sizeZ / 2 * chunk.blockSize);
             });
             gui.add(faceOptions, 'left', {
                 NONE: type.NONE,
@@ -65,8 +76,8 @@
             }).onChange((value) => {
                 mesh.geometry.update();
                 mesh.material.needsupdate = true;
-                mesh.position.set(-chunk.chunkSizeX / 2 * chunk.blockSize,
-                    -chunk.chunkSizeY / 2 * chunk.blockSize, chunk.chunkSizeZ / 2 * chunk.blockSize);
+                mesh.position.set(-chunk.sizeX / 2 * chunk.blockSize,
+                    -chunk.sizeY / 2 * chunk.blockSize, chunk.sizeZ / 2 * chunk.blockSize);
             });
             gui.add(faceOptions, 'right', {
                 NONE: type.NONE,
@@ -110,6 +121,36 @@
                 VOLUME: type.VOLUME,
                 BRICKS: type.BRICKS
             }).onChange((value) => {
+                mesh.geometry.update();
+                mesh.material.needsupdate = true;
+            });
+            gui.add(range, 'startX').min(0).max(chunk.sizeX).step(1).onChange((value) => {
+                chunk.rangeX[0] = value;
+                mesh.geometry.update();
+                mesh.material.needsupdate = true;
+            });
+            gui.add(range, 'endX').min(0).max(chunk.sizeX).step(1).onChange((value) => {
+                chunk.rangeX[1] = value;
+                mesh.geometry.update();
+                mesh.material.needsupdate = true;
+            });
+            gui.add(range, 'startY').min(0).max(chunk.sizeY).step(1).onChange((value) => {
+                chunk.rangeY[0] = value;
+                mesh.geometry.update();
+                mesh.material.needsupdate = true;
+            });
+            gui.add(range, 'endY').min(0).max(chunk.sizeY).step(1).onChange((value) => {
+                chunk.rangeY[1] = value;
+                mesh.geometry.update();
+                mesh.material.needsupdate = true;
+            });
+            gui.add(range, 'startZ').min(0).max(chunk.sizeZ).step(1).onChange((value) => {
+                chunk.rangeZ[0] = value;
+                mesh.geometry.update();
+                mesh.material.needsupdate = true;
+            });
+            gui.add(range, 'endZ').min(0).max(chunk.sizeZ).step(1).onChange((value) => {
+                chunk.rangeZ[1] = value;
                 mesh.geometry.update();
                 mesh.material.needsupdate = true;
             });
