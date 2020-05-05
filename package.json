@@ -1,12 +1,12 @@
 {
 	"name": "@valeera/voxel",
 	"version": "0.1.0",
-	"description": "A light weight number ID generator written in TS.",
+	"description": "A voxel engine written in TS.",
 	"main": "build/Voxel.js",
 	"repository": "ValeeraJS/Voxel",
 	"jsnext:main": "build/Voxel.module.js",
 	"module": "build/Voxel.module.js",
-	"types": "build/Voxel.d.ts",
+	"types": "build/index.d.ts",
 	"files": [
 		"build",
 		"LICENSE",
