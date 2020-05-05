@@ -94,5 +94,8 @@
 		"@valeera/mathx": "^0.1.4",
 		"@valeera/tree": "^0.1.2",
 		"three": "^0.116.1"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
