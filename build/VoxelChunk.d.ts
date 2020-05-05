@@ -27,12 +27,12 @@ export default class VoxelChunk extends AbstractTreeNode {
     activeTriangles: number;
     blocks: VoxelBlock[][][];
     sides: number;
-    create(sizex: number, sizey: number, sizez: number, blockSize?: number): void;
-    activateBlock(x: number, y: number, z: number, color: IColor4): void;
+    create(sizex: number, sizey: number, sizez: number, blockSize?: number): this;
+    activateBlock(x: number, y: number, z: number, color: IColor4): this;
     getActiveBlocksCount(): number;
     hasActiveBlocks(): any;
     loopBlocks(func: (block: VoxelBlock, x: number, y: number, z: number) => any, needRange?: boolean, value?: any): any;
-    resetDrawnSide(): void;
+    resetDrawnSide(): this;
     checkBlockActive(x: number, y: number, z: number): boolean;
     checkDrawLeft(x: number, y: number, z: number): boolean;
     checkDrawRight(x: number, y: number, z: number): boolean;

@@ -1,6 +1,6 @@
 {
 	"name": "@valeera/voxel",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "A voxel engine written in TS.",
 	"main": "build/Voxel.js",
 	"repository": "ValeeraJS/Voxel",

@@ -73,11 +73,12 @@
 	                }
 	            }
 	        }
+	        return this;
 	    }
 	    activateBlock(x, y, z, color) {
 	        const block = this.blocks[x][y][z];
 	        if (!block) {
-	            return;
+	            return this;
 	        }
 	        if (color.a === 0) {
 	            block.active = false;
@@ -89,6 +90,7 @@
 	        block.g = color.g;
 	        block.b = color.b;
 	        block.a = color.a;
+	        return this;
 	    }
 	    getActiveBlocksCount() {
 	        let b = 0;
@@ -142,6 +144,7 @@
 	        this.loopBlocks((block) => {
 	            block.resetDrawnSide();
 	        });
+	        return this;
 	    }
 	    // 检测某一个方块是否应该被画，如果方块周围都有其他方块，那么该方块不可以被画
 	    checkBlockActive(x, y, z) {

@@ -50,12 +50,14 @@ export default class VoxelChunk extends AbstractTreeNode{
                 }
             }
         }
+
+        return this;
     }
 
     activateBlock(x: number, y: number, z: number, color: IColor4) {
         const block = this.blocks[x][y][z];
         if (!block) {
-            return;
+            return this;
         }
         if (color.a === 0) {
             block.active = false;
@@ -66,6 +68,8 @@ export default class VoxelChunk extends AbstractTreeNode{
         block.g = color.g;
         block.b = color.b;
         block.a = color.a;
+
+        return this;
     }
 
     getActiveBlocksCount() {
@@ -121,6 +125,8 @@ export default class VoxelChunk extends AbstractTreeNode{
         this.loopBlocks((block: VoxelBlock) => {
             block.resetDrawnSide();
         });
+
+        return this;
     }
 
     // 检测某一个方块是否应该被画，如果方块周围都有其他方块，那么该方块不可以被画
