@@ -103,7 +103,6 @@ export default class VoxelChunk extends AbstractTreeNode{
         const endX = needRange ? this.rangeX[1] : this.sizeX;
         const endY = needRange ? this.rangeY[1] : this.sizeY;
         const endZ = needRange ? this.rangeZ[1] : this.sizeZ;
-        console.log(startX, startY, startZ, endX, endY, endZ)
         for (let x = startX; x < endX; x++) {
             for (let y = startY; y < endY; y++) {
                 for (let z = startZ; z < endZ; z++) {

@@ -121,7 +121,6 @@
 	        const endX = needRange ? this.rangeX[1] : this.sizeX;
 	        const endY = needRange ? this.rangeY[1] : this.sizeY;
 	        const endZ = needRange ? this.rangeZ[1] : this.sizeZ;
-	        console.log(startX, startY, startZ, endX, endY, endZ);
 	        for (let x = startX; x < endX; x++) {
 	            for (let y = startY; y < endY; y++) {
 	                for (let z = startZ; z < endZ; z++) {
@@ -614,6 +613,29 @@
 	        this.faceOptions = faceOptions;
 	        this.chunk = chunk;
 	        this.update();
+	    }
+	    getVoxelPositionByFace(face) {
+	        let normal = face.normal;
+	        const arr = this.getAttribute('position');
+	        let i = face.a * 3;
+	        const v1 = new three.Vector3(arr.array[i], arr.array[i + 1], arr.array[i + 2]);
+	        i = face.b * 3;
+	        const v2 = new three.Vector3(arr.array[i], arr.array[i + 1], arr.array[i + 2]);
+	        i = face.c * 3;
+	        const v3 = new three.Vector3(arr.array[i], arr.array[i + 1], arr.array[i + 2]);
+	        let minX = Math.min(Math.min(v1.x, v2.x), v3.x) / this.chunk.blockSize;
+	        let minY = Math.min(Math.min(v1.y, v2.y), v3.y) / this.chunk.blockSize;
+	        let minZ = Math.min(Math.min(v1.z, v2.z), v3.z) / this.chunk.blockSize;
+	        if (normal.x > 0) {
+	            minX--;
+	        }
+	        if (normal.y > 0) {
+	            minY--;
+	        }
+	        if (normal.z > 0) {
+	            minZ--;
+	        }
+	        return [minX, minY, minZ];
 	    }
 	    update() {
 	        const { vertices, colors } = this.chunk.rebuild(this.faceOptions);
