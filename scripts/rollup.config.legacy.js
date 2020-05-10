@@ -14,14 +14,29 @@ export default {
 			format: 'umd',
 			name: 'Fetcher',
 			file: 'build/Fetcher.legacy.js',
-			sourceMap: true,
-			indent: '\t'
+			sourcemap: true,
+			indent: '\t',
+			globals: {
+				"@valeera/eventdispatcher": "EventDispatcher",
+				"@valeera/fetcher": "Fetcher",
+				"@valeera/mathx": "Mathx",
+				"@valeera/tree": "Tree",
+				"three": "THREE"
+			}
 		},
 		{
 			format: 'es',
 			file: 'build/Fetcher.legacy.module.js',
-			sourceMap: true,
-			indent: '\t'
+			sourcemap: true,
+			indent: '\t',
+			globals: {
+				"@valeera/eventdispatcher": "EventDispatcher",
+				"@valeera/fetcher": "Fetcher",
+				"@valeera/mathx": "Mathx",
+				"@valeera/tree": "Tree",
+				"three": "THREE"
+			}
 		}
-	]
+	],
+	external: ["@valeera/eventdispatcher", "@valeera/fetcher", "@valeera/mathx", "@valeera/tree", "three"]
 };

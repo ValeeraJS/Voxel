@@ -27,12 +27,16 @@
     <script src="../build/Voxel.js"></script>
     <script src="https://cdn.bootcss.com/dat-gui/0.7.6/dat.gui.js"></script>
     <script>
-        let renderer, scene, camera, stats;
+        let renderer, scene, camera, stats, chunk;
         let mesh;
         let mouse, raycaster;
         const gui = new dat.GUI();
-        const loader = new Voxel.VoxelLoader();
-        loader.load('./vox/8x8x8.vox').then(chunk => {
+
+        function makeVoxMesh() {
+            chunk = new Voxel.VoxelChunk();
+            chunk.create(8, 8, 8).loopBlocks((block) => {
+                block.update(true, 255, 0, 255);
+            });
             let material = new THREE.MeshLambertMaterial({
                 vertexColors: THREE.VertexColors,
                 wireframe: false,
@@ -45,9 +49,10 @@
             scene.add(mesh);
 
             initGui(mesh);
-        });
+        }
 
         init();
+        makeVoxMesh();
 
         function initGui(mesh) {
             gui.add(mesh.material, 'wireframe');

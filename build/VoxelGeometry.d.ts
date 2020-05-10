@@ -1,4 +1,4 @@
-import { BufferGeometry } from 'three';
+import { BufferGeometry, Face3 } from 'three';
 import VoxelChunk from './VoxelChunk';
 export default class VoxelGeometry extends BufferGeometry {
     chunk: VoxelChunk;
@@ -11,5 +11,6 @@ export default class VoxelGeometry extends BufferGeometry {
         front: import("./VoxelChunk").VOXEL_BUILD_TYPE;
         back: import("./VoxelChunk").VOXEL_BUILD_TYPE;
     });
+    getVoxelPositionByFace(face: Face3): number[];
     update(): void;
 }

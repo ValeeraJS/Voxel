@@ -1,5 +1,6 @@
 import VoxelBlock from "./VoxelBlock";
 import IColor4 from "./interfaces/IColor4";
+import { AbstractTreeNode } from '@valeera/tree';
 export declare enum VOXEL_BUILD_TYPE {
     NONE = "NONE",
     SURFACE = "SURFACE",
@@ -14,26 +15,24 @@ export declare const DEFAULT_BUILD_OPTIONS: {
     front: VOXEL_BUILD_TYPE;
     back: VOXEL_BUILD_TYPE;
 };
-export default class VoxelChunk {
+export default class VoxelChunk extends AbstractTreeNode {
     static buildType: typeof VOXEL_BUILD_TYPE;
     blockSize: number;
-    chunkSizeX: number;
-    chunkSizeY: number;
-    chunkSizeZ: number;
-    posX: number;
-    posY: number;
-    posZ: number;
-    type: string;
+    sizeX: number;
+    sizeY: number;
+    sizeZ: number;
+    rangeX: number[];
+    rangeY: number[];
+    rangeZ: number[];
     activeTriangles: number;
     blocks: VoxelBlock[][][];
-    avgHeight: number;
     sides: number;
-    create(sizex: number, sizey: number, sizez: number, blockSize?: number): void;
-    activateBlock(x: number, y: number, z: number, color: IColor4): void;
+    create(sizex: number, sizey: number, sizez: number, blockSize?: number): this;
+    activateBlock(x: number, y: number, z: number, color: IColor4): this;
     getActiveBlocksCount(): number;
     hasActiveBlocks(): any;
-    traverse(func: (block: VoxelBlock, x: number, y: number, z: number) => any, value?: any): any;
-    resetDrawnSide(): void;
+    loopBlocks(func: (block: VoxelBlock, x: number, y: number, z: number) => any, needRange?: boolean, value?: any): any;
+    resetDrawnSide(): this;
     checkBlockActive(x: number, y: number, z: number): boolean;
     checkDrawLeft(x: number, y: number, z: number): boolean;
     checkDrawRight(x: number, y: number, z: number): boolean;

@@ -14,26 +14,29 @@ export default {
 			format: 'umd',
 			name: 'Voxel',
 			file: 'build/Voxel.js',
-			sourceMap: true,
+			sourcemap: true,
 			indent: '\t',
-			external: ["@valeera/eventdispatcher", "@valeera/fetcher", "three"],
 			globals: {
 				"@valeera/eventdispatcher": "EventDispatcher",
 				"@valeera/fetcher": "Fetcher",
+				"@valeera/mathx": "Mathx",
+				"@valeera/tree": "Tree",
 				"three": "THREE"
 			}
 		},
 		{
 			format: 'es',
 			file: 'build/Voxel.module.js',
-			sourceMap: true,
+			sourcemap: true,
 			indent: '\t',
-			external: ["@valeera/eventdispatcher", "@valeera/fetcher", "three"],
 			globals: {
 				"@valeera/eventdispatcher": "EventDispatcher",
 				"@valeera/fetcher": "Fetcher",
+				"@valeera/mathx": "Mathx",
+				"@valeera/tree": "Tree",
 				"three": "THREE"
 			}
 		}
-	]
+	],
+	external: ["@valeera/eventdispatcher", "@valeera/fetcher", "@valeera/mathx", "@valeera/tree", "three"]
 };
