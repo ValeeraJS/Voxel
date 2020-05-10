@@ -36,7 +36,7 @@
             let material = new THREE.MeshLambertMaterial({
                 vertexColors: THREE.VertexColors,
                 wireframe: false,
-                side: THREE.DoubleSide
+                // side: THREE.DoubleSide
             });
             mesh = new THREE.Mesh(new Voxel.VoxelGeometry(chunk), material);
             mesh.rotation.set(-Math.PI / 2, 0, 0);

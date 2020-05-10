@@ -50,6 +50,7 @@ export default class VoxelGeometry extends BufferGeometry {
             colorBuffer.setXYZW(i, colors[i][0] / 255, colors[i][1] / 255, colors[i][2] / 255, colors[i][3] / 255);
         }
         this.setAttribute('color', colorBuffer);
+        this.deleteAttribute('normal');
 
         this.computeVertexNormals();
     }

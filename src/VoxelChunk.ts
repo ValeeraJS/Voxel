@@ -409,12 +409,12 @@ export default class VoxelChunk extends AbstractTreeNode{
             this.blocks[x][y][z].drawnBackSide = true;
         }
 
-        vertices.push([(x + countX) * blockSize, (y + countY) * blockSize, z * blockSize]);
         vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
+        vertices.push([(x + countX) * blockSize, (y + countY) * blockSize, z * blockSize]);
         vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize]);
 
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
         vertices.push([x * blockSize, y * blockSize, z * blockSize]);
+        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
         vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize]);
 
         this.setColorData(colors, block);
