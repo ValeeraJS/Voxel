@@ -29,24 +29,25 @@
     <script>
         let renderer, scene, camera, stats, controls;
         let hoverPos, isDown;
-        let mesh, boxMesh, gui = new dat.GUI(), chunk;
-        let raycaster;
+        let mesh, boxMesh, gui, chunk;
+        let raycaster, intersct;
         let mouse = new THREE.Vector2(1, 1);
 
         let editParams = {
-            color: [ 255, 0, 0 ],
-            action: 2
+            color: [255, 0, 0],
+            action: 0
         }
 
         init();
         chunk = new Voxel.VoxelChunk();
-        chunk.create(10, 10, 10)
+        chunk.create(10, 10, 10);
+        chunk.blocks[4][4][4].update(true, 255, 0, 0);
         let material = new THREE.MeshLambertMaterial({
             vertexColors: THREE.VertexColors,
             wireframe: false
         });
         mesh = new THREE.Mesh(new Voxel.VoxelGeometry(chunk), material);
-        mesh.name= 'vox';
+        mesh.name = 'vox';
         boxMesh = new THREE.Mesh(new Voxel.VoxelBoundingGeometry(chunk), new THREE.MeshNormalMaterial({
             side: THREE.BackSide,
             wireframe: false
@@ -96,8 +97,39 @@
                 if (hoverPos) {
                     isDown = true;
                     controls.enabled = false;
-                    mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]].update(true, ...editParams.color);
-                    mesh.geometry.update();
+                    if (editParams.action === 0) {
+                        if(intersct.object === boxMesh) {
+                            mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]].update(true, ...editParams.color);
+                            mesh.geometry.update();
+                        } else if (intersct.object === mesh) {
+                            const normal = intersct.face.normal;
+                            let v = {
+                                x: hoverPos[0] + normal.x,
+                                y: hoverPos[1] + normal.y,
+                                z: hoverPos[2] + normal.z
+                            }
+                            if (v.x < 0 || v.x >= chunk.sizeX) {
+                                return;
+                            }
+                            if (v.y < 0 || v.y >= chunk.sizeY) {
+                                return;
+                            }
+                            if (v.z < 0 || v.z >= chunk.sizeZ) {
+                                return;
+                            }
+                            mesh.geometry.chunk.blocks[v.x][v.y][v.z].update(true, ...editParams.color);
+                            mesh.geometry.update();
+                        }
+                    } else if (editParams.action === 1 && intersct.object === mesh) {
+                        mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]].update(false, 0, 0, 0);
+                        mesh.geometry.update();
+                    } else if (editParams.action === 2 && intersct.object === mesh) {
+                        let block = mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]];
+                        if (block.active) {
+                            block.update(true, ...editParams.color);
+                            mesh.geometry.update();
+                        }
+                    }
                 }
             });
 
@@ -107,13 +139,34 @@
             });
 
             renderer.domElement.addEventListener('mousemove', (e) => {
-                if (isDown && hoverPos) {
-                    mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]].update(true, ...editParams.color);
-                    mesh.geometry.update();
-                }
-                if (isDown) {
-                    e.preventDefault();
-                }
+                // if (isDown && hoverPos) {
+                //     if (intersct.object === boxMesh) {
+                //             mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]].update(true, ...editParams.color);
+                //             mesh.geometry.update();
+                //         } else if(intersct.object === mesh) {
+                //             const normal = intersct.face.normal;
+                //             let v = {
+                //                 x: hoverPos[0] + normal.x,
+                //                 y: hoverPos[1] + normal.y,
+                //                 z: hoverPos[2] + normal.z
+                //             }
+                //             if (v.x < 0 || v.x >= chunk.sizeX) {
+                //                 return;
+                //             }
+                //             if (v.y < 0 || v.y >= chunk.sizeY) {
+                //                 return;
+                //             }
+                //             if (v.z < 0 || v.z >= chunk.sizeZ) {
+                //                 return;
+                //             }
+                //             mesh.geometry.chunk.blocks[v.x][v.y][v.z].update(true, ...editParams.color);
+                //             mesh.geometry.update();
+                //             mesh.update();
+                //         }
+                // }
+                // if (isDown) {
+                //     e.preventDefault();
+                // }
             });
         }
 
@@ -126,14 +179,18 @@
 
             raycaster.setFromCamera(mouse, camera);
 
-            var intersection = raycaster.intersectObject(scene, true);
+            var intersection = raycaster.intersectObjects(scene.children);
 
             if (intersection.length > 0) {
 
-                hoverPos = intersection[0].object.geometry.getVoxelPositionByFace(intersection[0].face);
+                intersct = intersection[0];
+                hoverPos = intersct.object.geometry.getVoxelPositionByFace(intersct.face);
 
             } else {
+
+                intersct = false;
                 hoverPos = false;
+
             }
         }
 
@@ -153,11 +210,16 @@
             renderer.render(scene, camera);
 
         }
-        
+
         initGui();
         function initGui() {
+            gui = new dat.GUI()
             gui.addColor(editParams, 'color');
-            gui.add(editParams, 'action', { add: 0, delete: 1, pen: 2 } );
+            gui.add(editParams, 'action', { 
+                add: 0,
+                delete: 1,
+                pen: 2
+            });
         }
     </script>
 </body>

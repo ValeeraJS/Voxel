@@ -689,6 +689,7 @@ class VoxelGeometry extends BufferGeometry {
         this.setAttribute('color', colorBuffer);
         this.deleteAttribute('normal');
         this.computeVertexNormals();
+        this.computeBoundingSphere();
     }
 }
 

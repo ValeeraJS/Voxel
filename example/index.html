@@ -29,7 +29,6 @@
     <script>
         let renderer, scene, camera, stats;
         let mesh;
-        let mouse, raycaster;
         const gui = new dat.GUI();
         const loader = new Voxel.VoxelLoader();
         loader.load('./vox/8x8x8.vox').then(chunk => {
@@ -156,8 +155,6 @@
         }
 
         function init() {
-            raycaster = new THREE.Raycaster();
-            mouse = new THREE.Vector2();
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);

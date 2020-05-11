@@ -53,5 +53,6 @@ export default class VoxelGeometry extends BufferGeometry {
         this.deleteAttribute('normal');
 
         this.computeVertexNormals();
+        this.computeBoundingSphere();
     }
 }
