@@ -1,4 +1,5 @@
 export { default as VoxelBlock } from './VoxelBlock';
+export { default as VoxelBoundingGeometry } from './VoxelBoundingGeometry';
 export { default as VoxelChunk } from './VoxelChunk';
 export { default as VoxelData } from './VoxelChunk';
 export { default as VoxelGeometry } from './VoxelGeometry';

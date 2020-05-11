@@ -29,7 +29,6 @@
     <script>
         let renderer, scene, camera, stats, chunk;
         let mesh;
-        let mouse, raycaster;
         const gui = new dat.GUI();
 
         function makeVoxMesh() {
@@ -161,8 +160,6 @@
         }
 
         function init() {
-            raycaster = new THREE.Raycaster();
-            mouse = new THREE.Vector2();
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);

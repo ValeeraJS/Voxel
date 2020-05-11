@@ -29,14 +29,13 @@
     <script>
         let renderer, scene, camera, stats;
         let mesh;
-        let mouse, raycaster;
         const gui = new dat.GUI();
         const loader = new Voxel.VoxelLoader();
         loader.load('./vox/8x8x8.vox').then(chunk => {
             let material = new THREE.MeshLambertMaterial({
                 vertexColors: THREE.VertexColors,
                 wireframe: false,
-                side: THREE.DoubleSide
+                // side: THREE.DoubleSide
             });
             mesh = new THREE.Mesh(new Voxel.VoxelGeometry(chunk), material);
             mesh.rotation.set(-Math.PI / 2, 0, 0);
@@ -156,8 +155,6 @@
         }
 
         function init() {
-            raycaster = new THREE.Raycaster();
-            mouse = new THREE.Vector2();
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);

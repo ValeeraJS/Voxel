@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdn.bootcss.com/three.js/110/three.js"></script>
+    <script src="./lib/OrbitControls.js"></script>
+    <script src="./lib/EventDispatcher.js"></script>
+    <script src="./lib/Fetcher.js"></script>
+    <script src="./lib/Mathx.js"></script>
+    <script src="./lib/Tree.js"></script>
+    <script src="../build/Voxel.js"></script>
+    <script src="https://cdn.bootcss.com/dat-gui/0.7.6/dat.gui.js"></script>
+    <script>
+        let renderer, scene, camera, stats, controls;
+        let hoverPos, isDown;
+        let mesh, boxMesh, gui, chunk;
+        let raycaster, intersct;
+        let mouse = new THREE.Vector2(1, 1);
+
+        let editParams = {
+            color: [255, 0, 0],
+            action: 0
+        }
+
+        init();
+        chunk = new Voxel.VoxelChunk();
+        chunk.create(10, 10, 10);
+        chunk.blocks[4][4][4].update(true, 255, 0, 0);
+        let material = new THREE.MeshLambertMaterial({
+            vertexColors: THREE.VertexColors,
+            wireframe: false
+        });
+        mesh = new THREE.Mesh(new Voxel.VoxelGeometry(chunk), material);
+        mesh.name = 'vox';
+        boxMesh = new THREE.Mesh(new Voxel.VoxelBoundingGeometry(chunk), new THREE.MeshNormalMaterial({
+            side: THREE.BackSide,
+            wireframe: false
+        }));
+        mesh.position.set(-chunk.sizeX / 2 * chunk.blockSize,
+            -chunk.sizeY / 2 * chunk.blockSize, -chunk.sizeZ / 2 * chunk.blockSize);
+        boxMesh.position.set(-chunk.sizeX / 2 * chunk.blockSize,
+            -chunk.sizeY / 2 * chunk.blockSize, -chunk.sizeZ / 2 * chunk.blockSize);
+        boxMesh.name = 'box';
+        scene.add(mesh);
+        scene.add(boxMesh);
+
+        function init() {
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+            camera.position.z = 100;
+
+            controls = new THREE.OrbitControls(camera, document.body);
+            controls.minDistance = 5;
+            controls.maxDistance = 2000;
+
+            scene.add(new THREE.AmbientLight(0x443333));
+
+            var light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(1, 0.75, 0.5);
+            scene.add(light);
+
+            light = new THREE.DirectionalLight(0xffffff, 0.4);
+            light.position.set(- 1, 0.25, - 0.7);
+            scene.add(light);
+
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousemove', onMouseMove, false);
+
+            onWindowResize();
+            animate();
+
+            renderer.domElement.addEventListener('mousedown', (e) => {
+                if (hoverPos) {
+                    isDown = true;
+                    controls.enabled = false;
+                    if (editParams.action === 0) {
+                        if(intersct.object === boxMesh) {
+                            mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]].update(true, ...editParams.color);
+                            mesh.geometry.update();
+                        } else if (intersct.object === mesh) {
+                            const normal = intersct.face.normal;
+                            let v = {
+                                x: hoverPos[0] + normal.x,
+                                y: hoverPos[1] + normal.y,
+                                z: hoverPos[2] + normal.z
+                            }
+                            if (v.x < 0 || v.x >= chunk.sizeX) {
+                                return;
+                            }
+                            if (v.y < 0 || v.y >= chunk.sizeY) {
+                                return;
+                            }
+                            if (v.z < 0 || v.z >= chunk.sizeZ) {
+                                return;
+                            }
+                            mesh.geometry.chunk.blocks[v.x][v.y][v.z].update(true, ...editParams.color);
+                            mesh.geometry.update();
+                        }
+                    } else if (editParams.action === 1 && intersct.object === mesh) {
+                        mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]].update(false, 0, 0, 0);
+                        mesh.geometry.update();
+                    } else if (editParams.action === 2 && intersct.object === mesh) {
+                        let block = mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]];
+                        if (block.active) {
+                            block.update(true, ...editParams.color);
+                            mesh.geometry.update();
+                        }
+                    }
+                }
+            });
+
+            renderer.domElement.addEventListener('mouseup', (e) => {
+                isDown = false;
+                controls.enabled = true;
+            });
+
+            renderer.domElement.addEventListener('mousemove', (e) => {
+                // if (isDown && hoverPos) {
+                //     if (intersct.object === boxMesh) {
+                //             mesh.geometry.chunk.blocks[hoverPos[0]][hoverPos[1]][hoverPos[2]].update(true, ...editParams.color);
+                //             mesh.geometry.update();
+                //         } else if(intersct.object === mesh) {
+                //             const normal = intersct.face.normal;
+                //             let v = {
+                //                 x: hoverPos[0] + normal.x,
+                //                 y: hoverPos[1] + normal.y,
+                //                 z: hoverPos[2] + normal.z
+                //             }
+                //             if (v.x < 0 || v.x >= chunk.sizeX) {
+                //                 return;
+                //             }
+                //             if (v.y < 0 || v.y >= chunk.sizeY) {
+                //                 return;
+                //             }
+                //             if (v.z < 0 || v.z >= chunk.sizeZ) {
+                //                 return;
+                //             }
+                //             mesh.geometry.chunk.blocks[v.x][v.y][v.z].update(true, ...editParams.color);
+                //             mesh.geometry.update();
+                //             mesh.update();
+                //         }
+                // }
+                // if (isDown) {
+                //     e.preventDefault();
+                // }
+            });
+        }
+
+        function onMouseMove(event) {
+
+            event.preventDefault();
+
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            var intersection = raycaster.intersectObjects(scene.children);
+
+            if (intersection.length > 0) {
+
+                intersct = intersection[0];
+                hoverPos = intersct.object.geometry.getVoxelPositionByFace(intersct.face);
+
+            } else {
+
+                intersct = false;
+                hoverPos = false;
+
+            }
+        }
+
+        function onWindowResize() {
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+        }
+
+        function animate() {
+
+            requestAnimationFrame(animate);
+
+            renderer.render(scene, camera);
+
+        }
+
+        initGui();
+        function initGui() {
+            gui = new dat.GUI()
+            gui.addColor(editParams, 'color');
+            gui.add(editParams, 'action', { 
+                add: 0,
+                delete: 1,
+                pen: 2
+            });
+        }
+    </script>
+</body>
+
+</html>
