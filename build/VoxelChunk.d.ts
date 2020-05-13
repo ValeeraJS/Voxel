@@ -40,15 +40,15 @@ export default class VoxelChunk extends AbstractTreeNode {
     checkDrawFront(x: number, y: number, z: number): boolean;
     checkDrawTop(x: number, y: number, z: number): boolean;
     checkDrawBottom(x: number, y: number, z: number): boolean;
-    drawBottom(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
-    drawTop(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
-    drawFront(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
-    drawBack(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
-    drawRight(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
-    drawLeft(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
+    drawBottom(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
+    drawTop(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
+    drawFront(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
+    drawBack(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
+    drawRight(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
+    drawLeft(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE): void;
     private setColorData;
     rebuild(faceOptions?: any): {
-        vertices: number[][];
-        colors: number[][];
+        vertices: number[];
+        colors: number[];
     };
 }

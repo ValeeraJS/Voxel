@@ -190,7 +190,7 @@ export default class VoxelChunk extends AbstractTreeNode{
         return true;
     }
 
-    drawBottom(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
+    drawBottom(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
         const block: VoxelBlock = this.blocks[x][y][z];
         if (block.drawnBottomSide) {
             return;
@@ -236,19 +236,19 @@ export default class VoxelChunk extends AbstractTreeNode{
             this.blocks[x][y][z].drawnBottomSide = true;
         }
 
-        vertices.push([(x + countX) * blockSize, y * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
+        vertices.push((x + countX) * blockSize, y * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, y * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
 
-        vertices.push([(x + countX) * blockSize, y * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize]);
+        vertices.push((x + countX) * blockSize, y * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize);
 
         this.setColorData(colors, block);
         return;
     }
 
-    drawTop(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
+    drawTop(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
         const block: VoxelBlock = this.blocks[x][y][z];
         if (block.drawnTopSide) {
             return;
@@ -293,19 +293,19 @@ export default class VoxelChunk extends AbstractTreeNode{
             countZ++;
             this.blocks[x][y][z].drawnTopSide = true;
         }
-        vertices.push([(x + countX) * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, y * blockSize + blockSize, z * blockSize]);
-        vertices.push([x * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize]);
+        vertices.push((x + countX) * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, y * blockSize + blockSize, z * blockSize);
+        vertices.push(x * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize);
 
-        vertices.push([(x + countX) * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize + blockSize, z * blockSize]);
-        vertices.push([x * blockSize, y * blockSize + blockSize, z * blockSize]);
+        vertices.push((x + countX) * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize + blockSize, z * blockSize);
+        vertices.push(x * blockSize, y * blockSize + blockSize, z * blockSize);
 
         this.setColorData(colors, block);
         return;
     }
 
-    drawFront(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
+    drawFront(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
         const block: VoxelBlock = this.blocks[x][y][z];
         if (block.drawnFrontSide) {
             return;
@@ -350,20 +350,20 @@ export default class VoxelChunk extends AbstractTreeNode{
             countY++;
             this.blocks[x][y][z].drawnFrontSide = true;
         }
-        vertices.push([(x + countX) * blockSize, (y + countY) * blockSize, z * blockSize + blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize + blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize + blockSize]);
+        vertices.push((x + countX) * blockSize, (y + countY) * blockSize, z * blockSize + blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize + blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize + blockSize);
 
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize + blockSize]);
-        vertices.push([x * blockSize, y * blockSize, z * blockSize + blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize + blockSize]);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize + blockSize);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize + blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize + blockSize);
 
         this.setColorData(colors, block);
 
         return;
     }
 
-    drawBack(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
+    drawBack(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
         const block: VoxelBlock = this.blocks[x][y][z];
         if (block.drawnBackSide) {
             return;
@@ -409,19 +409,19 @@ export default class VoxelChunk extends AbstractTreeNode{
             this.blocks[x][y][z].drawnBackSide = true;
         }
 
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
-        vertices.push([(x + countX) * blockSize, (y + countY) * blockSize, z * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize]);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize);
+        vertices.push((x + countX) * blockSize, (y + countY) * blockSize, z * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize);
 
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize]);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize);
 
         this.setColorData(colors, block);
         return;
     }
 
-    drawRight(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
+    drawRight(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
         const block: VoxelBlock = this.blocks[x][y][z];
         if (block.drawnRightSide) {
             return;
@@ -466,20 +466,20 @@ export default class VoxelChunk extends AbstractTreeNode{
             countY++;
             this.blocks[x][y][z].drawnRightSide = true;
         }
-        vertices.push([x * blockSize + blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize + blockSize, (y + countY) * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize + blockSize, y * blockSize, (z + countZ) * blockSize]);
+        vertices.push(x * blockSize + blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize + blockSize, (y + countY) * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize + blockSize, y * blockSize, (z + countZ) * blockSize);
 
-        vertices.push([x * blockSize + blockSize, (y + countY) * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize + blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize + blockSize, (y + countY) * blockSize, z * blockSize]);
+        vertices.push(x * blockSize + blockSize, (y + countY) * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize + blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize + blockSize, (y + countY) * blockSize, z * blockSize);
 
         this.setColorData(colors, block);
         return;
     }
 
     // 绘制左侧部分，将某一个方块所有相邻同色方块合并为一个方块面，减少顶点数。
-    drawLeft(vertices: number[][], colors: number[][], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
+    drawLeft(vertices: number[], colors: number[], x: number, y: number, z: number, type: VOXEL_BUILD_TYPE) {
         const block: VoxelBlock = this.blocks[x][y][z];
         // 如果这个方块面已经被其他方块面融合为一个面，就不再对这个方块做处理。
         if (block.drawnLeftSide) {
@@ -527,26 +527,26 @@ export default class VoxelChunk extends AbstractTreeNode{
             this.blocks[x][y][z].drawnLeftSide = true;
         }
         block.drawnLeftSide = true;
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, (z + countZ) * blockSize]);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize, y * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, (z + countZ) * blockSize);
 
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize);
 
         this.setColorData(colors, block);
         return;
     }
 
-    private setColorData(colors: number[][], block: VoxelBlock) {
+    private setColorData(colors: number[], block: VoxelBlock) {
         for (let i = 0; i < 6; i++) {
-            colors.push([
+            colors.push(
                 block.r,
                 block.g,
                 block.b,
                 block.a
-            ]);
+            );
         }
         this.sides++;
     }
@@ -558,8 +558,8 @@ export default class VoxelChunk extends AbstractTreeNode{
         }
 
         this.sides = 0;
-        const vertices: number[][] = [];
-        const colors: number[][] = [];
+        const vertices: number[] = [];
+        const colors: number[] = [];
         if (!this.hasActiveBlocks()) {
             return {
                 vertices,

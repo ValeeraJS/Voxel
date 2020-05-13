@@ -286,12 +286,12 @@ class VoxelChunk extends AbstractTreeNode {
             countZ++;
             this.blocks[x][y][z].drawnBottomSide = true;
         }
-        vertices.push([(x + countX) * blockSize, y * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize]);
+        vertices.push((x + countX) * blockSize, y * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, y * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize);
         this.setColorData(colors, block);
         return;
     }
@@ -343,12 +343,12 @@ class VoxelChunk extends AbstractTreeNode {
             countZ++;
             this.blocks[x][y][z].drawnTopSide = true;
         }
-        vertices.push([(x + countX) * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, y * blockSize + blockSize, z * blockSize]);
-        vertices.push([x * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize + blockSize, z * blockSize]);
-        vertices.push([x * blockSize, y * blockSize + blockSize, z * blockSize]);
+        vertices.push((x + countX) * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, y * blockSize + blockSize, z * blockSize);
+        vertices.push(x * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize + blockSize, (z + countZ) * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize + blockSize, z * blockSize);
+        vertices.push(x * blockSize, y * blockSize + blockSize, z * blockSize);
         this.setColorData(colors, block);
         return;
     }
@@ -400,12 +400,12 @@ class VoxelChunk extends AbstractTreeNode {
             countY++;
             this.blocks[x][y][z].drawnFrontSide = true;
         }
-        vertices.push([(x + countX) * blockSize, (y + countY) * blockSize, z * blockSize + blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize + blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize + blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize + blockSize]);
-        vertices.push([x * blockSize, y * blockSize, z * blockSize + blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize + blockSize]);
+        vertices.push((x + countX) * blockSize, (y + countY) * blockSize, z * blockSize + blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize + blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize + blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize + blockSize);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize + blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize + blockSize);
         this.setColorData(colors, block);
         return;
     }
@@ -457,12 +457,12 @@ class VoxelChunk extends AbstractTreeNode {
             countY++;
             this.blocks[x][y][z].drawnBackSide = true;
         }
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
-        vertices.push([(x + countX) * blockSize, (y + countY) * blockSize, z * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
-        vertices.push([(x + countX) * blockSize, y * blockSize, z * blockSize]);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize);
+        vertices.push((x + countX) * blockSize, (y + countY) * blockSize, z * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize);
+        vertices.push((x + countX) * blockSize, y * blockSize, z * blockSize);
         this.setColorData(colors, block);
         return;
     }
@@ -514,12 +514,12 @@ class VoxelChunk extends AbstractTreeNode {
             countY++;
             this.blocks[x][y][z].drawnRightSide = true;
         }
-        vertices.push([x * blockSize + blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize + blockSize, (y + countY) * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize + blockSize, y * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize + blockSize, (y + countY) * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize + blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize + blockSize, (y + countY) * blockSize, z * blockSize]);
+        vertices.push(x * blockSize + blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize + blockSize, (y + countY) * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize + blockSize, y * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize + blockSize, (y + countY) * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize + blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize + blockSize, (y + countY) * blockSize, z * blockSize);
         this.setColorData(colors, block);
         return;
     }
@@ -575,23 +575,18 @@ class VoxelChunk extends AbstractTreeNode {
             this.blocks[x][y][z].drawnLeftSide = true;
         }
         block.drawnLeftSide = true;
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, y * blockSize, z * blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, (z + countZ) * blockSize]);
-        vertices.push([x * blockSize, (y + countY) * blockSize, z * blockSize]);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize, y * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, y * blockSize, z * blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, (z + countZ) * blockSize);
+        vertices.push(x * blockSize, (y + countY) * blockSize, z * blockSize);
         this.setColorData(colors, block);
         return;
     }
     setColorData(colors, block) {
         for (let i = 0; i < 6; i++) {
-            colors.push([
-                block.r,
-                block.g,
-                block.b,
-                block.a
-            ]);
+            colors.push(block.r, block.g, block.b, block.a);
         }
         this.sides++;
     }
@@ -677,14 +672,13 @@ class VoxelGeometry extends BufferGeometry {
     }
     update() {
         const { vertices, colors } = this.chunk.rebuild(this.faceOptions);
-        const vertexBuffer = new BufferAttribute(new Float32Array(vertices.length * 3), 3);
-        for (var i = 0; i < vertices.length; i++) {
-            vertexBuffer.setXYZ(i, vertices[i][0], vertices[i][1], vertices[i][2]);
-        }
+        const vertexBuffer = new BufferAttribute(new Float32Array(vertices), 3);
         this.setAttribute('position', vertexBuffer);
         var colorBuffer = new BufferAttribute(new Float32Array(colors.length * 4), 4);
-        for (var i = 0; i < colors.length; i++) {
-            colorBuffer.setXYZW(i, colors[i][0] / 255, colors[i][1] / 255, colors[i][2] / 255, colors[i][3] / 255);
+        let ii = 0;
+        for (let i = 0; i < colors.length; i++) {
+            ii = i * 4;
+            colorBuffer.setXYZW(i, colors[ii] / 255, colors[ii + 1] / 255, colors[ii + 2] / 255, colors[ii + 3] / 255);
         }
         this.setAttribute('color', colorBuffer);
         this.deleteAttribute('normal');

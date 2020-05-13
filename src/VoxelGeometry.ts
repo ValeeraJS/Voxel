@@ -39,15 +39,15 @@ export default class VoxelGeometry extends BufferGeometry {
 
     update() {
         const { vertices, colors } = this.chunk.rebuild(this.faceOptions);
-        const vertexBuffer = new BufferAttribute(new Float32Array(vertices.length * 3), 3);
-        for (var i = 0; i < vertices.length; i++) {
-            vertexBuffer.setXYZ(i, vertices[i][0], vertices[i][1], vertices[i][2]);
-        }
+        const vertexBuffer = new BufferAttribute(new Float32Array(vertices), 3);
+
         this.setAttribute('position', vertexBuffer);
 
         var colorBuffer = new BufferAttribute(new Float32Array(colors.length * 4), 4);
-        for (var i = 0; i < colors.length; i++) {
-            colorBuffer.setXYZW(i, colors[i][0] / 255, colors[i][1] / 255, colors[i][2] / 255, colors[i][3] / 255);
+        let ii = 0;
+        for (let i = 0; i < colors.length; i++) {
+            ii = i * 4;
+            colorBuffer.setXYZW(i, colors[ii] / 255, colors[ii+1] / 255, colors[ii+2] / 255, colors[ii+3] / 255);
         }
         this.setAttribute('color', colorBuffer);
         this.deleteAttribute('normal');
